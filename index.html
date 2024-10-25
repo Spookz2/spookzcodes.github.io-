@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spookz Unblocked</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-size: cover;
+      background-position: center;
+      font-family: Arial, sans-serif;
+    }
+    #codeButton {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: yellow;
+      color: black;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+    #popup {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: grey;
+      color: white;
+      text-align: center;
+      border-radius: 5px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="codeButton">Code!</button>
+
+  <div id="popup">
+    Game in beta. Report to our <a href="https://discord.gg/v92XRQ3Y" style="color: yellow; text-decoration: none;" target="_blank">Discord</a> for problems.
+  </div>
+
+  <script>
+    // Function to set the background image
+    function setBackgroundImage(url) {
+      document.body.style.backgroundImage = `url('${url}')`;
+    }
+
+    // Initial background image
+    setBackgroundImage('https://i.redd.it/zs2ec4w041251.png');
+
+    // Handle the "Code!" button click
+    document.getElementById('codeButton').onclick = function() {
+      this.style.display = 'none'; // Hide the button
+      document.getElementById('popup').style.display = 'block'; // Show the popup
+    };
+  </script>
+
+</body>
+</html>
