@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Grid - Zero Anime</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2C2C2C; /* Grey background */
+      color: #FFE5B4; /* Peach text */
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+      color: #FFE5B4; /* Peach */
+    }
+    /* Header with Search Bar and Settings Button */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #2C2C2C; /* Grey background */
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    /* Settings Button (Three Lines) */
+    .settings-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .settings-button span {
+      width: 24px;
+      height: 3px;
+      background-color: #FFE5B4; /* Peach */
+      border-radius: 2px;
+    }
+    .settings-button:hover span {
+      background-color: rgba(255, 229, 180, 0.8); /* Peach with transparency */
+    }
+    /* Search Bar */
+    .search-bar {
+      width: 200px;
+      padding: 8px 15px;
+      border: 2px solid #FFE5B4; /* Peach */
+      border-radius: 20px;
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      color: #FFE5B4; /* Peach */
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .search-bar::placeholder {
+      color: #FFE5B4; /* Peach */
+      font-style: italic;
+      opacity: 0.7;
+    }
+    .search-bar:focus {
+      border-color: #FFE5B4; /* Peach */
+      box-shadow: 0 0 10px rgba(255, 229, 180, 0.8); /* Peach shadow */
+    }
+    /* Anime Grid */
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-top: 80px; /* Add margin to avoid overlap with header */
+    }
+    .anime-card {
+      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .anime-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+    .anime-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-bottom: 2px solid #FFE5B4; /* Peach */
+    }
+    .anime-card h3 {
+      font-size: 1.2em;
+      margin: 10px;
+      color: #FFE5B4; /* Peach */
+      text-align: center;
+    }
+    .anime-card button {
+      display: block;
+      width: 80%;
+      margin: 10px auto;
+      padding: 8px;
+      background-color: #FFE5B4; /* Peach */
+      color: #000000; /* Black */
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .anime-card button:hover {
+      background-color: rgba(255, 229, 180, 0.8); /* Peach with transparency */
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with Settings Button and Search Bar -->
+  <div class="header">
+    <!-- Settings Button -->
+    <button class="settings-button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <!-- Search Bar -->
+    <input type="text" class="search-bar" placeholder="Search anime...">
+  </div>
+
+  <h1>Anime Library</h1>
+  <div class="anime-grid">
+    <!-- Anime Card 1 -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/65f92e6e315a931ef872da4b312442b8.jpg" alt="solo leveling">
+      <h3>solo leveling S2</h3>
+      <button onclick="watchAnime('solo leveling S2')">Watch Now</button>
+    </div>
+    <!-- Anime Card 2 -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/82402f796b7d84d7071ab1e03ff7747a.jpg" alt="Jujutsu Kaisen">
+      <h3>Jujutsu Kaisen</h3>
+      <button onclick="watchAnime('Jujutsu Kaisen')">Watch Now</button>
+    </div>
+    <!-- Anime Card 3 -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/aa2cb028fd55a639ceccab8c94fbd4b4.jpg" alt="Beheneko">
+      <h3>Beheneko: The Elf-Girl's Cat is Secretly an S-Ranked Monster!</h3>
+      <button onclick="watchAnime('Beheneko: The Elf-Girl\'s Cat is Secretly an S-Ranked Monster!')">Watch Now</button>
+    </div>
+    <!-- Anime Card 4 -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/a8b56a7589ff9edb6c86977c31e27a06.jpg" alt="Dandadan">
+      <h3>Dandadan</h3>
+      <button onclick="watchAnime('Dandadan')">Watch Now</button>
+    </div>
+    <!-- Anime Card 5 -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/bcd84731a3eda4f4a306250769675065.jpg" alt="One Piece">
+      <h3>One Piece</h3>
+      <button onclick="watchAnime('One Piece')">Watch Now</button>
+    </div>
+    <!-- Anime Card 6 -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/e91ce663a30bda517c5a191c575a16c0.jpg" alt="The 100 Girlfriends">
+      <h3>The 100 Girlfriends Who Really, Really Love You S2</h3>
+      <button onclick="watchAnime('The 100 Girlfriends Who Really, Really Love You S2')">Watch Now</button>
+    </div>
+    <!-- Anime Card 7 -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/04e3c56bf2b52e90e0016b803967600e.jpg" alt="Possibly the Greatest Alchemist of All Time">
+      <h3>Possibly the Greatest Alchemist of All Time</h3>
+      <button onclick="watchAnime('Possibly the Greatest Alchemist of All Time')">Watch Now</button>
+    </div>
+    <!-- Anime Card 8 -->
+    <div class="anime-card">
+      <img src="https://static1.animekai.to/9a/i/1/28/6766495ccdca2.jpg" alt="Seirei Gensouki: Spirit Chronicles S1">
+      <h3>Seirei Gensouki: Spirit Chronicles S1</h3>
+      <button onclick="watchAnime('Seirei Gensouki: Spirit Chronicles S1')">Watch Now</button>
+    </div>
+    <!-- Anime Card 9 -->
+    <div class="anime-card">
+      <img src="https://static1.animekai.to/5e/i/1/c6/6766494a91b33.jpg" alt="Seirei Gensouki: Spirit Chronicles S2">
+      <h3>Seirei Gensouki: Spirit Chronicles S2</h3>
+      <button onclick="watchAnime('Seirei Gensouki: Spirit Chronicles S2')">Watch Now</button>
+    </div>
+  </div>
+  <!-- JavaScript for Watch Now Button -->
+  <script>
+    function watchAnime(title) {
+      // Redirect to watch.html with the anime title as a parameter
+      window.location.href = `watch.html?anime=${encodeURIComponent(title)}`;
+    }
+  </script>
+</body>
+</html>
