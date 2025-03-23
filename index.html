@@ -3,69 +3,262 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spookz Unblocked</title>
-  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <title>Zero Anime</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      background-size: cover;
-      background-position: center;
       font-family: Arial, sans-serif;
-    }
-    #codeButton {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: grey;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.5em;
-      cursor: pointer;
-      border-radius: 20px; /* Curved edges */
-      font-family: 'Luckiest Guy', sans-serif; /* Fortnite-style font */
-    }
-    #popup {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 20px;
-      background-color: grey;
-      color: white;
+      background-color: #2C2C2C; /* Dark grey background */
+      position: relative;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #1a1a1a; /* Dark grey background */
+      z-index: -1;
+    }
+    /* Search Container */
+    .search-container {
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      margin: 20px auto;
+      max-width: 900px;
+    }
+    h1 {
+      color: #FFE5B4; /* Peach */
       text-align: center;
-      border-radius: 5px;
+      margin: 20px 0;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .search-bar {
+      width: 95%;
+      padding: 8px 15px;
+      margin: 5px 0;
+      border: 1px solid #FFE5B4; /* Peach */
+      border-radius: 20px;
+      font-size: 12px;
+      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
+      color: #FFE5B4; /* Peach */
+      transition: all 0.3s ease;
+    }
+    .search-bar:focus {
+      outline: none;
+      border-color: #FFE5B4; /* Peach */
+      box-shadow: 0 0 8px rgba(255, 229, 180, 0.3); /* Peach shadow */
+    }
+    .search-bar::placeholder {
+      color: #FFE5B4; /* Peach */
+      font-style: italic;
+      opacity: 0.7;
+    }
+    /* Top Search Section */
+    .top-search {
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .top-search h3 {
+      color: #FFE5B4; /* Peach */
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .top-search-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .top-search a {
+      color: #FFE5B4; /* Peach */
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
+      transition: all 0.3s ease;
+      font-size: 11px;
+      border: 1px solid #FFE5B4; /* Peach */
+    }
+    .top-search a:hover {
+      background-color: #FFE5B4; /* Peach */
+      color: #000000; /* Black */
+      transform: translateY(-1px);
+    }
+    /* Watch Button */
+    .watch-button {
+      background-color: #FFE5B4; /* Peach */
+      color: #000000; /* Black */
+      padding: 8px 25px;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      margin: 15px 0;
+      display: block;
+      width: fit-content;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .watch-button:hover {
+      background-color: rgba(255, 229, 180, 0.8); /* Peach with transparency */
+      transform: scale(1.05);
+    }
+    /* Social Section */
+    .social-section {
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      padding: 20px;
+      border-radius: 10px;
+      margin: 25px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .social-section h2 {
+      color: #FFE5B4; /* Peach */
       font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .social-section h3 {
+      color: #FFE5B4; /* Peach */
+      font-size: 0.9em;
+      margin-bottom: 15px;
+    }
+    .social-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .social-buttons button {
+      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
+      color: #FFE5B4; /* Peach */
+      padding: 6px 15px;
+      border: 1px solid #FFE5B4; /* Peach */
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 12px;
+    }
+    .social-buttons button:hover {
+      background-color: #FFE5B4; /* Peach */
+      color: #000000; /* Black */
+    }
+    /* Promo Section */
+    .promo-section {
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      padding: 25px;
+      border-radius: 10px;
+      margin: 25px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .promo-section h2 {
+      color: #FFE5B4; /* Peach */
+      font-size: 1.4em;
+      margin-bottom: 15px;
+    }
+    .promo-section p {
+      color: #FFE5B4; /* Peach */
+      font-size: 0.9em;
+      line-height: 1.5;
+    }
+    /* Trending Posts */
+    .trending-posts {
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      padding: 20px;
+      border-radius: 10px;
+      margin: 25px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .trending-posts h3 {
+      color: #FFE5B4; /* Peach */
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+    .trending-post {
+      margin-bottom: 15px;
+    }
+    .trending-post h4 {
+      color: #FFE5B4; /* Peach */
+      font-size: 0.95em;
+      margin-bottom: 5px;
+    }
+    .trending-post p {
+      color: #FFE5B4; /* Peach */
+      font-size: 0.85em;
     }
   </style>
 </head>
 <body>
-
-  <button id="codeButton">Code!</button>
-
-  <div id="popup">
-    Game in beta. Report to our <a href="https://discord.gg/v92XRQ3Y" style="color: yellow; text-decoration: none;" target="_blank">Discord</a> for problems.
+  <h1> -- Zero Anime -- </h1>
+  <div class="search-container">
+    <input type="text" class="search-bar" placeholder="Search anime...">
+    <div class="top-search">
+      <h3>Top Searches:</h3>
+      <div class="top-search-links">
+        <a href="#">Attack on Titan</a>
+        <a href="#">Jujutsu Kaisen</a>
+        <a href="#">Demon Slayer</a>
+        <a href="#">My Hero Academia</a>
+        <a href="#">One Piece</a>
+        <a href="#">Chainsaw Man</a>
+        <a href="#">Spy x Family</a>
+        <a href="#">Tokyo Revengers</a>
+        <a href="#">solo leveling</a>
+        <a href="#">Vinland Saga</a>
+      </div>
+    </div>
   </div>
 
+  <!-- Watch Button with Navigation -->
+  <button class="watch-button" id="goToNewScreen">Watch Anime Now</button>
+
+  <div class="social-section">
+    <h2>Share Zero Anime</h2>
+    <h3>to your friends!</h3>
+    <div class="social-buttons">
+      <button>Tiktok</button>
+      <button>Tweet</button>
+      <button>Share</button>
+      <button>Discord</button>
+    </div>
+  </div>
+
+  <div class="promo-section">
+    <h2>Zero Anime - The best site to watch anime online for Free with no Ads!!</h2>
+    <p>Do you know that according to Google, the monthly search volume for anime visited topics is up to<br> one/1 billion major点睛 as famous worldwide and it is no wonder we've seen a sharp rise in the<br> number of free online streaming sites.</p>
+  </div>
+
+  <div class="trending-posts">
+    <h3>Trending Posts</h3>
+    <div class="trending-post">
+      <h4>user801</h4>
+      <p>love the new solo leveling season<br></p>
+    </div>
+    <div class="trending-post">
+      <h4>I have the best taste in anime</h4>
+      <p>Change my mind..</p>
+    </div>
+    <div class="trending-post">
+      <p>Also i love this website so much.</p>
+    </div>
+    <div class="trending-post">
+      <p>This website was made by the discord user iyezwtf if you wanna help edit with me hit them dm's open at all times or for suggestions :)</p>
+    </div>
+  </div>
+
+  <!-- JavaScript for Navigation -->
   <script>
-    // Function to set the background image
-    function setBackgroundImage(url) {
-      document.body.style.backgroundImage = `url('${url}')`;
-    }
-
-    // Initial background image
-    setBackgroundImage('https://pbs.twimg.com/media/GL3OfhPWIAw3yqo?format=jpg&name=large');
-
-    // Handle the "Code!" button click
-    document.getElementById('codeButton').onclick = function() {
-      this.style.display = 'none'; // Hide the button
-      document.getElementById('popup').style.display = 'block'; // Show the popup
-    };
+    // Add event listener to the button
+    document.getElementById("goToNewScreen").addEventListener("click", function() {
+      // Redirect to the new page
+      window.location.href = "new-screen.html"; // Replace with your desired page
+    });
   </script>
-
 </body>
 </html>
 
