@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Anime - Zero Anime</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #2C2C2C; /* Grey background */
+      color: #FFE5B4; /* Peach text */
+    }
+
+    .container {
+      display: flex;
+      max-width: 1400px;
+      width: 100%;
+      margin-top: 20px;
+      gap: 20px;
+    }
+
+    /* Header with Settings Button and Search Bar */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #2C2C2C; /* Grey background */
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Settings Button (Three Lines) */
+    .settings-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 1002; /* Ensure it's above the sidebar */
+    }
+
+    .settings-button span {
+      width: 24px;
+      height: 3px;
+      background-color: #FFE5B4; /* Peach */
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    .settings-button:hover span {
+      background-color: rgba(255, 229, 180, 0.8); /* Peach with transparency */
+    }
+
+    /* Search Bar */
+    .search-bar {
+      width: 200px;
+      padding: 8px 15px;
+      border: 2px solid #FFE5B4; /* Peach */
+      border-radius: 20px; /* Curved edges */
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      color: #FFE5B4; /* Peach */
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar::placeholder {
+      color: #FFE5B4; /* Peach */
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .search-bar:focus {
+      border-color: #FFE5B4; /* Peach */
+      box-shadow: 0 0 10px rgba(255, 229, 180, 0.8); /* Peach shadow */
+    }
+
+    /* Sidebar */
+    .sidebar {
+      height: 100%;
+      width: 0; /* Sidebar is hidden by default */
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #1C1C1C; /* Darker grey */
+      overflow-x: hidden;
+      transition: 0.3s; /* Smooth transition */
+      padding-top: 60px;
+      z-index: 1001; /* Ensure it's above other content */
+    }
+
+    .sidebar-link {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 1.2em;
+      color: #FFE5B4; /* Peach */
+      display: block;
+      transition: 0.2s;
+    }
+
+    .sidebar-link:hover {
+      background-color: #FFE5B4; /* Peach */
+      color: #000000; /* Black */
+    }
+
+    /* Episode List */
+    .episode-list {
+      width: 300px;
+      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
+      border-radius: 15px; /* Curved edges */
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      height: 80vh;
+      overflow-y: auto;
+    }
+
+    .episode-list h2 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #FFE5B4; /* Peach */
+      text-align: center;
+    }
+
+    .episode-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .episode-list li {
+      margin-bottom: 15px;
+    }
+
+    .episode-list a {
+      display: block;
+      padding: 12px;
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      color: #FFE5B4; /* Peach */
+      text-decoration: none;
+      border-radius: 10px; /* Curved edges */
+      transition: background-color 0.3s ease;
+      font-size: 1.1em;
+    }
+
+    .episode-list a:hover {
+      background-color: #FFE5B4; /* Peach */
+      color: #000000; /* Black */
+    }
+
+    .episode-list a.watched {
+      background-color: rgba(255, 229, 180, 0.5); /* Peach with transparency */
+    }
+
+    /* Video Player */
+    .video-player {
+      flex: 1;
+      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
+      border-radius: 15px; /* Curved edges */
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .video-player h2 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #FFE5B4; /* Peach */
+    }
+
+    iframe {
+      width: 100%;
+      height: 70vh;
+      border-radius: 10px; /* Curved edges */
+      border: none;
+    }
+
+    /* New Season Section */
+    .season-section {
+      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
+      border-radius: 10px; /* Smaller rounded corners */
+      padding: 10px; /* Much smaller padding */
+      width: 95%; /* Stretch to full width */
+      margin-top: 10px; /* Smaller margin above the box */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* Smaller shadow */
+    }
+
+    /* Adjust font sizes for smaller appearance */
+    .season-info h2 {
+      font-size: 1.4em; /* Smaller font size */
+      color: #FFE5B4; /* Peach */
+      margin-bottom: 8px; /* Smaller margin */
+    }
+
+    .season-info p {
+      font-size: 0.9em; /* Smaller font size */
+      color: #FFE5B4; /* Peach */
+      margin-bottom: 8px; /* Smaller margin */
+    }
+
+    .server-options h3 {
+      font-size: 1em; /* Smaller font size */
+      color: #FFE5B4; /* Peach */
+      margin-bottom: 8px; /* Smaller margin */
+    }
+
+    .countdown h3 {
+      font-size: 1em; /* Smaller font size */
+      color: #FFE5B4; /* Peach */
+      margin-bottom: 8px; /* Smaller margin */
+    }
+
+    .seasons h3 {
+      font-size: 1em; /* Smaller font size */
+      color: #FFE5B4; /* Peach */
+      margin-bottom: 8px; /* Smaller margin */
+    }
+
+    /* Smaller buttons */
+    .server-options button {
+      padding: 6px 12px; /* Smaller padding */
+      font-size: 0.9em; /* Smaller font size */
+      border-radius: 15px; /* Smaller rounded corners */
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      color: #FFE5B4; /* Peach */
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .server-options button:hover {
+      background-color: #FFE5B4; /* Peach */
+      color: #000000; /* Black */
+    }
+
+    /* Smaller season boxes */
+    .season-list {
+      display: flex;
+      gap: 10px; /* Smaller gap between season boxes */
+    }
+
+    .season {
+      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
+      border-radius: 8px; /* Smaller rounded corners */
+      padding: 10px; /* Smaller padding */
+      flex: 1;
+      text-align: center;
+      transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition */
+    }
+
+    .season:hover {
+      box-shadow: 0 0 15px #FFE5B4; /* Peach glow */
+      transform: scale(1.05); /* Slight zoom effect */
+    }
+
+    .season h4 {
+      font-size: 1em; /* Smaller font size */
+      color: #FFE5B4; /* Peach */
+      margin-bottom: 5px; /* Smaller margin */
+    }
+
+    .season p {
+      font-size: 0.9em; /* Smaller font size */
+      color: #FFE5B4; /* Peach */
+    }
+
+    /* Hide "Episodes" text on hover */
+    .season:hover p {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-link">Go Back to Home</a>
+  </div>
+
+  <!-- Header with Settings Button and Search Bar -->
+  <div class="header">
+    <!-- Settings Button -->
+    <button class="settings-button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <!-- Search Bar -->
+    <input type="text" class="search-bar" placeholder="Search anime...">
+  </div>
+
+  <div class="container">
+    <!-- Episode List -->
+    <div class="episode-list">
+      <h2>Episodes</h2>
+      <ul id="episode-list">
+        <!-- Episodes will be dynamically added here -->
+      </ul>
+    </div>
+    <!-- Video Player -->
+    <div class="video-player">
+      <h2 id="anime-title">Now Playing: Episode 1</h2>
+      <iframe id="video-player" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- New Season Section -->
+  <div class="season-section">
+    <div class="season-info">
+      <h2>You are watching Episode 1</h2>
+      <p>If the current server is not working, please try switching to other servers.</p>
+      <p>The next episode is expected to be released on <span id="release-time">2025/03/23 9:30:00 AM</span></p>
+    </div>
+
+    <div class="server-options">
+      <h3>Servers</h3>
+      <button onclick="changeServer('sub')">Hard Sub</button>
+      <button onclick="changeServer('sub')">Soft Sub</button>
+      <button onclick="changeServer('dub')">Dub</button>
+    </div>
+
+    <div class="countdown">
+      <h3>Countdown</h3>
+      <p id="countdown-timer">1 day, 15 hours, 8 minutes, 25 seconds</p>
+    </div>
+
+    <div class="seasons">
+      <h3>Seasons</h3>
+      <div class="season-list">
+        <div class="season">
+          <h4>Season 1</h4>
+          <p>12 Episodes</p>
+        </div>
+        <div class="season">
+          <h4>Season 2</h4>
+          <p>12 Episodes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to open the sidebar
+    function openSidebar() {
+      document.getElementById('sidebar').style.width = '250px';
+    }
+
+    // Function to close the sidebar
+    function closeSidebar() {
+      document.getElementById('sidebar').style.width = '0';
+    }
+
+    // Add event listener to the settings button
+    document.querySelector('.settings-button').addEventListener('click', openSidebar);
+
+    // Close the sidebar when clicking outside of it
+    document.addEventListener('click', (event) => {
+      const sidebar = document.getElementById('sidebar');
+      const settingsButton = document.querySelector('.settings-button');
+      if (!sidebar.contains(event.target) && !settingsButton.contains(event.target)) {
+        closeSidebar();
+      }
+    });
+
+    // Set the release date and time
+    const releaseDate = new Date('2025-03-23T09:30:00').getTime();
+
+    // Update the countdown every second
+    const countdownTimer = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = releaseDate - now;
+
+      // Calculate days, hours, minutes, and seconds
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      // Display the countdown
+      document.getElementById('countdown-timer').textContent = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+
+      // If the countdown is over, display a message
+      if (timeLeft < 0) {
+        clearInterval(countdownTimer);
+        document.getElementById('countdown-timer').textContent = 'Episode is now available!';
+      }
+    }, 1000);
+
+    // Get the anime title from the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const animeTitle = decodeURIComponent(urlParams.get('anime'));
+    console.log('Anime Title:', animeTitle); // Debugging: Log the anime title
+
+    // Define episode data for each anime
+    const animeEpisodes = {
+      'solo leveling S2': [
+        { title: 'Episode 1', file: 'https://mega.nz/embed/i84zjJpL#zgG9LMvaKk7zUewcXn-7-C1gbMeSqC9pwcE-z6sMvvg' },
+        { title: 'Episode 2', file: 'https://mega.nz/embed/GpoS2QhC#CERXtEWLhA_Ibxi6mrd8hPQBtwirU8P4bYI3Lo-uAqU' },
+        { title: 'Episode 3', file: 'https://mega.nz/embed/fpIyzaDK#Cp4dPwXUggGCabgEbQm3KlV57bi-kmPr8QBWb_eKTqU' },
+        { title: 'Episode 4', file: 'https://mega.nz/embed/ehpi0DCL#Lj7-8WwsnVsXf-5mehzHZUOLc1k7_7I6-bCQRfKLbkM' },
+        { title: 'Episode 5', file: 'https://mega.nz/embed/D15DRSqL#Ge9_2ZDNuPdaI9_rJEdflQE96v-WCKQ9SI7sXC-Lvt4' },
+        { title: 'Episode 6', file: 'https://mega.nz/embed/ntwRnDAJ#aIt7ph-4uiPelVP7xAxzd1EsxomC2u4jRT16HtkG648' },
+        { title: 'Episode 7', file: 'https://mega.nz/embed/KhpWTaaL#ipOE3JzatetTByFER4D8xga7Ak7Q1F4tFz25xO92W9w' },
+        { title: 'Episode 8', file: 'https://mega.nz/embed/i1ZymKSZ#b2EWoCyNAEikEgMSzuRmP1_9Fv8mjnNXsr5yq77pUtU' },
+        { title: 'Episode 9', file: 'https://mega.nz/embed/i95mzByK#hukaYAOquf0438aHMTFSeeJxSBCotoy-HbqoUzqqOEs' },
+        { title: 'Episode 10', file: 'https://mega.nz/embed/29AmnZRS#ScH8TgL7iFuzQ_Xfsj6ltOwBjc4h0D3HhKzXN0u_FWg' },
+        { title: 'Episode 11', file: 'https://mega.nz/embed/C9wEkaJL#DG_pHIWTLFZkMDTAJUJYP2iCfEwTdeyh2YxHFvZpedU' },
+        { title: 'Episode 12', file: 'https://mega.nz/embed/C9wEkaJL#DG_pHIWTLFZkMDTAJUJYP2iCfEwTdeyh2YxHFvZpedU'},
+      ],
+      'Jujutsu Kaisen': [
+        { title: 'Episode 1', file: 'https://example.com/jujutsu-kaisen-ep1' },
+        { title: 'Episode 2', file: 'https://example.com/jujutsu-kaisen-ep2' },
+        { title: 'Episode 3', file: 'https://example.com/jujutsu-kaisen-ep3' },
+        { title: 'Episode 4', file: 'https://example.com/jujutsu-kaisen-ep4' },
+        { title: 'Episode 5', file: 'https://example.com/jujutsu-kaisen-ep5' },
+        { title: 'Episode 6', file: 'https://example.com/jujutsu-kaisen-ep6' },
+        { title: 'Episode 7', file: 'https://example.com/jujutsu-kaisen-ep7' },
+        { title: 'Episode 8', file: 'https://example.com/jujutsu-kaisen-ep8' },
+        { title: 'Episode 9', file: 'https://example.com/jujutsu-kaisen-ep9' },
+        { title: 'Episode 10', file: 'https://example.com/jujutsu-kaisen-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/jujutsu-kaisen-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/jujutsu-kaisen-ep12' },
+      ],
+      'Beheneko: The Elf-Girl\'s Cat is Secretly an S-Ranked Monster!': [
+        { title: 'Episode 1', file: 'https://mega.nz/embed/D5hz1RLb#D9CPiN6yWtMbA0te0wn6Pmf5HFkIfcvC4iqHVuIy-vM' },
+        { title: 'Episode 2', file: 'https://mega.nz/embed/j84i3a7I#Krtiyocv4-MoKK7mVH9TGxCLMnYo6oJdPG6-dnelm-w' },
+        { title: 'Episode 3', file: 'https://mega.nz/embed/70I2lbrC#kPrYmHY7qKiGGVyhOxbQtJZPAphsvbOvxlHxIBDm31U' },
+        { title: 'Episode 4', file: 'https://mega.nz/embed/zsARkazK#d2lekGt--TLWgYHSXOQHBywKtQuAYH6-xQvBAJM6gQs' },
+        { title: 'Episode 5', file: 'https://mega.nz/embed/jhRGQbKa#bwqd-JMeWlR05MTHz24bjy3Rm5axxW1ukRPbP9nL-4Y' },
+        { title: 'Episode 6', file: 'https://mega.nz/embed/rggGCDyB#6g3xJ8BgIOt1j668U0ehvhtfyT8f8OYiX93r3qLxghQ' },
+        { title: 'Episode 7', file: 'https://mega.nz/embed/DsZD1IwC#Er7B0IRSuOhl1not-fVkjMTF8cm6yFt50QpRj-3-lK0' },
+        { title: 'Episode 8', file: 'https://mega.nz/embed/jpp0yb4S#FmqrfGnBdgQEHu9-QO1sVeEPisI7eZOSdL9OIzpqPvg' },
+        { title: 'Episode 9', file: 'https://mega.nz/embed/y4YgQYyS#TWhdn0cUm3dtkfY0ry3J7RarcOqbLW_5YDLgodUyOeY' },
+        { title: 'Episode 10', file:'https://mega.nz/embed/Phgj1QpS#YRfAiUBND03kAC8XaAgw1qYRNrro9K_fRasJqyp_Iyk'},
+        { title: 'Episode 11', file: 'https://mega.nz/embed/n4JnjYoC#--FW9sHX4tUc4DsLDxW2I89_2ct7_c_va4hXfHkAQWw' },
+        { title: 'Episode 12', file: 'https://mega.nz/embed/m4ZmFKpJ#pxnuvEKGAdQ7K508aBW3KguDpg2WJ_--V4z4HU3tBhg' },
+      ],
+      'Dandadan': [
+        { title: 'Episode 1', file: 'https://example.com/dandadan-ep1' },
+        { title: 'Episode 2', file: 'https://example.com/dandadan-ep2' },
+        { title: 'Episode 3', file: 'https://example.com/dandadan-ep3' },
+        { title: 'Episode 4', file: 'https://example.com/dandadan-ep4' },
+        { title: 'Episode 5', file: 'https://example.com/dandadan-ep5' },
+        { title: 'Episode 6', file: 'https://example.com/dandadan-ep6' },
+        { title: 'Episode 7', file: 'https://example.com/dandadan-ep7' },
+        { title: 'Episode 8', file: 'https://example.com/dandadan-ep8' },
+        { title: 'Episode 9', file: 'https://example.com/dandadan-ep9' },
+        { title: 'Episode 10', file: 'https://example.com/dandadan-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/dandadan-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/dandadan-ep12' },
+      ],
+      'One Piece': [
+        { title: 'Episode 1', file: 'https://example.com/one-piece-ep1' },
+        { title: 'Episode 2', file: 'https://example.com/one-piece-ep2' },
+        { title: 'Episode 3', file: 'https://example.com/one-piece-ep3' },
+        { title: 'Episode 4', file: 'https://example.com/one-piece-ep4' },
+        { title: 'Episode 5', file: 'https://example.com/one-piece-ep5' },
+        { title: 'Episode 6', file: 'https://example.com/one-piece-ep6' },
+        { title: 'Episode 7', file: 'https://example.com/one-piece-ep7' },
+        { title: 'Episode 8', file: 'https://example.com/one-piece-ep8' },
+        { title: 'Episode 9', file: 'https://example.com/one-piece-ep9' },
+        { title: 'Episode 10', file: 'https://example.com/one-piece-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/one-piece-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/one-piece-ep12' },
+      ],
+      'The 100 Girlfriends Who Really, Really Love You S2': [
+          { title: 'Episode 1', file: 'https://mega.nz/embed/b9hGUBCS#v8_wvxW0LigQ9XhxBWnBiqZ8W-TgXnS50tvTW2SXDVg' },
+        { title: 'Episode 2', file: 'https://mega.nz/embed/T8J0CL7S#agWqWpel7AS_PHNhu_NXwApT1rsEqH9KDrBZ0mqaY3U' },
+        { title: 'Episode 3', file: 'https://mega.nz/embed/C8Y1wA6S#0wRlnn_lfOFwfflHF1rONVlBGwarqydlhKNoWM0GFBc' },
+        { title: 'Episode 4', file: 'https://mega.nz/embed/mh4AlQrK#4P-E9O5UOjw1oriP2W7WoAD2mcGRZuU4BPI3VziQAvs' },
+        { title: 'Episode 5', file: 'https://mega.nz/embed/3lwFkAYI#3imjP-RRuRGdDLePr67-wtU00CZSrfxSf02VpiJfdCo' },
+        { title: 'Episode 6', file: 'https://mega.nz/embed/r8hzAbKJ#iRr98tOrAtf5o9bXufQDsDY_--T0e9mYWhGqLnF2lFw' },
+        { title: 'Episode 7', file: 'https://mega.nz/embed/ntJ3WQBY#Et_pSBP-2Q-bt_kWW0VlemK7FCYMNETec-k4ogPNcWk' },
+        { title: 'Episode 8', file: 'https://mega.nz/embed/WxBUiIQQ#6lLS44hw5YzXGPbXGGpM7ehnABVj2k25WhKhIICUSi4' },
+        { title: 'Episode 9', file: 'https://mega.nz/embed/61wlQJDZ#ZojucmkF-c3boi6kAvG4Nc3zbdNHu_z6MPwByk316Ao' },
+        { title: 'Episode 10', file: 'https://example.com/100-girlfriends-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/100-girlfriends-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/100-girlfriends-ep12' },
+      ],
+        // Add more episodes...
+      'Possibly the Greatest Alchemist of All Time': [
+        { title: 'Episode 1', file: 'https://mega.nz/embed/LpxjiTpC#NWv8-Kb9H0n4gE-PjZhfV0RpJ-Nl0qjjn_57sdYC6z8' },
+        { title: 'Episode 2', file: 'https://mega.nz/embed/39gy3KSQ#-Py7xaQvQGwNCgfRfLXoyk_H8Mku61Nc8D1GH24JvdQ' },
+        { title: 'Episode 3', file: 'https://mega.nz/embed/fpAB1SCB#PF8jji0C2i_JmDLFCG_xg_kAjIORgKSvOYr55tQwT7M' },
+        { title: 'Episode 4', file: 'https://mega.nz/embed/nhoxGIBa#2v69TLtRXbxuD6tw3nb2NA8kM7Hg1BuKG9Jl2YW5kNM' },
+        { title: 'Episode 5', file: 'https://mega.nz/embed/v0x1laaZ#uVjuW6P9KilHknwLo6rJJv27VATV-cQCibZzAdcFOWY' },
+        { title: 'Episode 6', file: 'https://mega.nz/embed/Ctph3TzJ#_iuGuLnY-pwnWE28Fd-QGUT2VYDBnoHVBpImw_ggwbQ' },
+        { title: 'Episode 7', file: 'https://mega.nz/embed/i94FXKpD#UetJkeHREPFyjwApac86YQMUoDfDAUT_zFVvbhS15l0' },
+        { title: 'Episode 8', file: 'https://mega.nz/embed/nhBVABIL#EuaDJsxF3yHr7RESVq50i1N_dKeF6diOKKS8JxWLOAw' },
+        { title: 'Episode 9', file: 'https://mega.nz/embed/Ls5FnYaB#7xI_yzeKMezTKUuecsbWzULXDNNZgzyrjPkdTYT48VI' },
+        { title: 'Episode 10', file: 'https://mega.nz/embed/2tByjL6T#n8QiI13gVDR1LoRye9lIVCrhqNIXdYwz_0S9VKFVYUo' },
+        { title: 'Episode 11', file: 'https://mega.nz/embed/7p9WlK7D#-7y6z8Z9Q2v1w3x4y5z6A7B8C9D0E1F2G3H4I5J6K7L' },
+        { title: 'Episode 12', file: 'https://mega.nz/embed/8q0XmM8E#-8z7a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u' },
+        // Add more episodes...
+      ],
+      'Seirei Gensouki: Spirit Chronicles S1': [
+        { title: 'Episode 1', file: 'https://mega.nz/embed/vppwjQSZ#ak89shNpleTL9aEVS3PrKTvIHn6VFz19cLNAFhqUVHg' },
+        { title: 'Episode 2', file: 'https://mega.nz/embed/j0421ZwS#IXhGOGQvEkvUSXx5s3DQDfqA88UG7kXJavYpVDDfNlI' },
+        { title: 'Episode 3', file: 'https://mega.nz/embed/WoZzhRaL#_X4HxZtqQxl53NE-eu-bzirwe1d580oETaRA-RQmYv8' },
+        { title: 'Episode 4', file: 'https://mega.nz/embed/6wA3CIaR#g1Nejv2fHYCE138J3fFcvi1eoxPrd68AdFYtzuPZlqQ' },
+        { title: 'Episode 5', file: 'https://mega.nz/embed/X1xj2LRA#7T7jEpgy_xPq-IFXnbGOnpFTbGGgIx1zCYlXAvlwaJo' },
+        { title: 'Episode 6', file: 'https://mega.nz/embed/G85D1ZgS#WriygHjSZJW-NaJXguWDV5xyv0T4uAuXBxOJ2YTaA5Q' },
+        { title: 'Episode 7', file: 'https://mega.nz/embed/C4YxCb6R#tZBivQXsTDY1kIAx2Qxeiqo4GT2bxCasI23SPaL9hug' },
+        { title: 'Episode 8', file: 'https://mega.nz/embed/zhYQSKSZ#sFqjE2oCK8DPkXU8Jsgs1PyfMz-tjyCFHq04VsfTMKc' },
+        { title: 'Episode 9', file: 'https://mega.nz/embed/W5wxQJ6J#Qi8f_AkNSPfzSR3BV4-YBGaYET0f1lr0Gk4mpnGCKNc' },
+        { title: 'Episode 10', file: 'https://mega.nz/embed/zkwCwSzQ#sj0QK_jwhiKNjUV7gsOdiFp98MN850irV8Xv4e27wZ8' },
+        { title: 'Episode 11', file: 'https://mega.nz/embed/K9wCFK6D#DN3dKURPTz1DtLFsWB_kJ8JwO2hUVvROUrAKCSi58Ss' },
+        { title: 'Episode 12', file: 'https://mega.nz/embed/Gg4V1TIL#jtvLRv50k-f2ma_pP5fI_ixP7wUKLFp9Y-GP1LG3yOw' },
+        // Add more episodes...
+      ],
+      'Seirei Gensouki: Spirit Chronicles S2': [
+         { title: 'Episode 1', file: 'https://mega.nz/embed/GhBxXTZT#haroffZsDOa-e2MZbmIjFjtXkvHqUggfHnDlQBXBXQE' },
+        { title: 'Episode 2', file: 'https://mega.nz/embed/Soo01SJR#9Z_mJV8hn3Uw3SBrfcYusCB--nqTrKLVw6d0L7wrqcE' },
+        { title: 'Episode 3', file: 'https://mega.nz/embed/O5RQCAzb#s6upOVsD7xdkO4PVsgpGiF4ZyW_sKs-kKI3AzmoCHyQ' },
+        { title: 'Episode 4', file: 'https://mega.nz/embed/q5YQTIJR#-Qh8D3KwGqk3AC9onGjAfb97-CWD5r-99fkvhjHgjEs' },
+        { title: 'Episode 5', file: 'https://mega.nz/embed/Gxol0ZYK#r5nOzG_Rv4nX-nHb05TuaKj5F77g4I-2J3kcDd4jRuI' },
+        { title: 'Episode 6', file: 'https://mega.nz/embed/D4pSzKLb#AeQHNDyLfDPj4-V5vtLdRqcu-BrF9-wLn0XgxwW-f8Q' },
+        { title: 'Episode 7', file: 'https://mega.nz/embed/DoJzDYjb#T7rpfyUEOw9JGC7LdC6HKd9MBFTyjeeMUjxGZgWGOTs' },
+        { title: 'Episode 8', file: 'https://mega.nz/embed/jhZT0Rwb#Cc2uzgcttMvJxVHN5fJl41gKYl7Ko_ZhX5aAt5xYz5k' },
+        { title: 'Episode 9', file: 'https://mega.nz/embed/684gkBjJ#OI4TvYyokn9MAGsblL7Rv9QMs-4n2k8Rf_8G9v1R10k' },
+        { title: 'Episode 10', file: 'https://mega.nz/embed/q0oQDQ5b#4JzXYRkIezQJ81J15JxZwZxckTB6GhaYw8B2r1_Y-8c' },
+        { title: 'Episode 11', file: 'https://mega.nz/embed/v4QjVYjK#YD4bnDolHAXh9ERaGJko-7boG0LjkDRxTvmzF2nV1Bo' },
+        { title: 'Episode 12', file: 'https://mega.nz/embed/y8ZFjASA#xvySEqpLavQ7kmzwPsd2mFPdUGB83djLFelHGhZwnoQ' },
+        // Add more episodes...
+      ],
+    };
+
+    // Function to load episodes
+    function loadEpisode(videoFile, episodeTitle) {
+      const videoPlayer = document.getElementById('video-player');
+      videoPlayer.src = videoFile;
+
+      // Update the "Now Playing" text
+      document.getElementById('anime-title').textContent = `Now Playing: ${episodeTitle}`;
+
+      // Mark episode as watched
+      markEpisodeAsWatched(episodeTitle);
+    }
+
+    // Function to mark episode as watched
+    function markEpisodeAsWatched(episodeTitle) {
+      const watchedEpisodes = JSON.parse(localStorage.getItem('watchedEpisodes') || '[]');
+      if (!watchedEpisodes.includes(episodeTitle)) {
+        watchedEpisodes.push(episodeTitle);
+        localStorage.setItem('watchedEpisodes', JSON.stringify(watchedEpisodes));
+      }
+      updateEpisodeList();
+    }
+
+    // Function to update episode list with watched status
+    function updateEpisodeList() {
+      const watchedEpisodes = JSON.parse(localStorage.getItem('watchedEpisodes') || '[]');
+      const episodeLinks = document.querySelectorAll('.episode-list a');
+      episodeLinks.forEach(link => {
+        if (watchedEpisodes.includes(link.textContent)) {
+          link.classList.add('watched');
+        }
+      });
+    }
+
+    // Function to populate the episode list
+    function populateEpisodeList(episodes) {
+      const episodeList = document.getElementById('episode-list');
+      episodeList.innerHTML = ''; // Clear existing list
+      episodes.forEach((episode, index) => {
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = '#';
+        link.textContent = episode.title;
+        link.onclick = () => loadEpisode(episode.file, episode.title);
+        listItem.appendChild(link);
+        episodeList.appendChild(listItem);
+      });
+      updateEpisodeList();
+    }
+
+    // Function to change server (SUB/DUB)
+    function changeServer(server) {
+      alert(`Switched to ${server.toUpperCase()} server`);
+      // Implement server change logic here
+    }
+
+    // Load the correct episode list based on the anime title
+    if (animeTitle && animeEpisodes[animeTitle]) {
+      console.log('Episodes found for:', animeTitle); // Debugging: Log if episodes are found
+      populateEpisodeList(animeEpisodes[animeTitle]);
+      loadEpisode(animeEpisodes[animeTitle][0].file, animeEpisodes[animeTitle][0].title);
+    } else {
+      console.error('Anime not found:', animeTitle); // Debugging: Log if anime is not found
+      document.getElementById('anime-title').textContent = 'Anime not found!';
+    }
+  </script>
+</body>
+</html>
