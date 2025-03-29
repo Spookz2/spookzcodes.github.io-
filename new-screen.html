@@ -16,6 +16,14 @@
       text-align: center;
       font-size: 2.5em;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 10px; /* Reduced margin */
+      margin-top: 40px; /* Added top margin to push it down */
+      color: #FFE5B4; /* Peach */
+    }
+    .status-message {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1em;
       margin-bottom: 20px;
       color: #FFE5B4; /* Peach */
     }
@@ -81,7 +89,7 @@
       padding: 20px;
       max-width: 1200px;
       margin: 0 auto;
-      margin-top: 80px; /* Add margin to avoid overlap with header */
+      margin-top: 60px; /* Reduced margin to account for moved title */
     }
     .anime-card {
       background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
@@ -138,6 +146,8 @@
   </div>
 
   <h1>Anime Library</h1>
+  <div class="status-message">- - if the anime episodes are missing it's being worked on or report to our discord for updates - -</div>
+  
   <div class="anime-grid">
     <!-- Anime Card 1 -->
     <div class="anime-card">
@@ -193,7 +203,24 @@
       <h3>Seirei Gensouki: Spirit Chronicles S2</h3>
       <button onclick="watchAnime('Seirei Gensouki: Spirit Chronicles S2')">Watch Now</button>
     </div>
-  </div>
+    <!-- Anime Card 10 (New) -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/5db400c33f7494bc8ae96f9e634958d0.jpg" alt="Naruto">
+      <h3>Naruto</h3>
+      <button onclick="watchAnime('Naruto')">Watch Now</button>
+    </div>
+    <!-- Anime Card 11 (New) -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/9cc864ccccce7f38f7a100627ef21516.jpg" alt="vinland saga">
+      <h3>vinland saga</h3>
+      <button onclick="watchAnime('vinland saga')">Watch Now</button>
+    </div>
+    <!-- Anime Card 12 (New) -->
+    <div class="anime-card">
+      <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/fe1ad220ce9e7951b2a2e9107aca3e82.jpg" alt="Miss caretaker of Sunohara-sou">
+      <h3>Miss caretaker of Sunohara-sou
+</h3> <button onclick="watchAnime('Miss caretaker of Sunohara-sou')">Watch Now</button>
+    </div>
   <!-- JavaScript for Watch Now Button -->
   <script>
     function watchAnime(title) {
