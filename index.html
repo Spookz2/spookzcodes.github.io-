@@ -5,260 +5,363 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zero Anime</title>
   <style>
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
     body {
-      font-family: Arial, sans-serif;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #2C2C2C; /* Dark grey background */
-      position: relative;
-      min-height: 100vh;
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #1a1a1a; /* Dark grey background */
-      z-index: -1;
-    }
-    /* Search Container */
-    .search-container {
-      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      margin: 20px auto;
-      max-width: 900px;
-    }
-    h1 {
-      color: #FFE5B4; /* Peach */
-      text-align: center;
-      margin: 20px 0;
-      font-size: 2.5em;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    .search-bar {
-      width: 95%;
-      padding: 8px 15px;
-      margin: 5px 0;
-      border: 1px solid #FFE5B4; /* Peach */
-      border-radius: 20px;
-      font-size: 12px;
-      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
-      color: #FFE5B4; /* Peach */
-      transition: all 0.3s ease;
-    }
-    .search-bar:focus {
-      outline: none;
-      border-color: #FFE5B4; /* Peach */
-      box-shadow: 0 0 8px rgba(255, 229, 180, 0.3); /* Peach shadow */
-    }
-    .search-bar::placeholder {
-      color: #FFE5B4; /* Peach */
-      font-style: italic;
-      opacity: 0.7;
-    }
-    /* Top Search Section */
-    .top-search {
-      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
-      padding: 15px;
-      border-radius: 8px;
-      margin: 15px 0;
-    }
-    .top-search h3 {
-      color: #FFE5B4; /* Peach */
-      margin-bottom: 12px;
-      font-size: 13px;
-    }
-    .top-search-links {
+      margin: 0;
+      padding: 0;
+      background: #2C2C2C; /* Light grey background */
+      color: #FFE5B4; /* Peach text */
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      height: 100vh;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    
+    /* LOADING SCREEN */
+    .loading-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: #FFE5B4;
+      text-shadow: 0 0 10px rgba(255, 229, 180, 0.5);
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 229, 180, 0.3);
+      border-top-color: #FFE5B4;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    /* PROFILE SELECTION */
+    .profiles-container, .manage-container {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      background: rgba(0,0,0,0.2); /* Slightly darker container */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    
+    .title {
+      font-size: 3.5rem;
+      margin-bottom: 30px;
+      color: #FFE5B4;
+    }
+    
+    .profile-grid {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px 0;
       flex-wrap: wrap;
-      gap: 8px;
     }
-    .top-search a {
-      color: #FFE5B4; /* Peach */
-      text-decoration: none;
-      padding: 4px 10px;
-      border-radius: 12px;
-      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
-      transition: all 0.3s ease;
-      font-size: 11px;
-      border: 1px solid #FFE5B4; /* Peach */
-    }
-    .top-search a:hover {
-      background-color: #FFE5B4; /* Peach */
-      color: #000000; /* Black */
-      transform: translateY(-1px);
-    }
-    /* Watch Button */
-    .watch-button {
-      background-color: #FFE5B4; /* Peach */
-      color: #000000; /* Black */
-      padding: 8px 25px;
-      border: none;
-      border-radius: 20px;
-      font-size: 13px;
+    
+    .profile {
+      width: 160px;
       cursor: pointer;
-      margin: 15px 0;
-      display: block;
-      width: fit-content;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
     }
-    .watch-button:hover {
-      background-color: rgba(255, 229, 180, 0.8); /* Peach with transparency */
+    
+    .profile:hover {
       transform: scale(1.05);
     }
-    /* Social Section */
-    .social-section {
-      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
-      padding: 20px;
-      border-radius: 10px;
-      margin: 25px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-    .social-section h2 {
-      color: #FFE5B4; /* Peach */
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-    .social-section h3 {
-      color: #FFE5B4; /* Peach */
-      font-size: 0.9em;
-      margin-bottom: 15px;
-    }
-    .social-buttons {
+    
+    .profile-icon {
+      width: 140px;
+      height: 140px;
+      background: #333;
+      border-radius: 4px;
+      margin: 0 auto 15px;
       display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .add-profile .profile-icon {
+      background: transparent;
+      border: 2px dashed #FFE5B4;
+    }
+    
+    .profile-name {
+      font-size: 1.3rem;
+      color: #FFE5B4;
+    }
+    
+    /* NETFLIX-STYLE MANAGE SCREEN */
+    .manage-container .profile {
+      width: 200px;
+    }
+    
+    .manage-container .profile-icon {
+      width: 180px;
+      height: 180px;
+    }
+    
+    .edit-options {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.8);
+      padding: 10px;
+      display: flex;
+      justify-content: center;
       gap: 10px;
     }
-    .social-buttons button {
-      background-color: rgba(44, 44, 44, 0.9); /* Dark grey */
-      color: #FFE5B4; /* Peach */
-      padding: 6px 15px;
-      border: 1px solid #FFE5B4; /* Peach */
-      border-radius: 15px;
+    
+    .edit-btn, .delete-btn {
+      background: transparent;
+      border: none;
+      color: white;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 12px;
+      font-size: 0.9rem;
+      padding: 5px 10px;
     }
-    .social-buttons button:hover {
-      background-color: #FFE5B4; /* Peach */
-      color: #000000; /* Black */
+    
+    .delete-btn {
+      color: #ff6b6b;
     }
-    /* Promo Section */
-    .promo-section {
-      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
-      padding: 25px;
-      border-radius: 10px;
-      margin: 25px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    
+    .name-input {
+      background: #555;
+      border: 1px solid #FFE5B4;
+      color: #FFE5B4;
+      padding: 8px 12px;
+      font-size: 1rem;
+      width: 80%;
+      margin-top: 10px;
+      display: none;
     }
-    .promo-section h2 {
-      color: #FFE5B4; /* Peach */
-      font-size: 1.4em;
-      margin-bottom: 15px;
+    
+    .action-button {
+      background: transparent;
+      border: 1px solid #FFE5B4;
+      color: #FFE5B4;
+      padding: 12px 25px;
+      cursor: pointer;
+      margin-top: 40px;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      border-radius: 4px;
     }
-    .promo-section p {
-      color: #FFE5B4; /* Peach */
-      font-size: 0.9em;
-      line-height: 1.5;
+    
+    .action-button:hover {
+      background: rgba(255, 229, 180, 0.1);
     }
-    /* Trending Posts */
-    .trending-posts {
-      background-color: rgba(68, 68, 68, 0.9); /* Dark grey */
-      padding: 20px;
-      border-radius: 10px;
-      margin: 25px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-    .trending-posts h3 {
-      color: #FFE5B4; /* Peach */
-      font-size: 1.2em;
-      margin-bottom: 15px;
-    }
-    .trending-post {
-      margin-bottom: 15px;
-    }
-    .trending-post h4 {
-      color: #FFE5B4; /* Peach */
-      font-size: 0.95em;
-      margin-bottom: 5px;
-    }
-    .trending-post p {
-      color: #FFE5B4; /* Peach */
-      font-size: 0.85em;
+    
+    .disabled-add {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
-  <h1> -- Zero Anime -- </h1>
-  <div class="search-container">
-    <input type="text" class="search-bar" placeholder="Search anime...">
-    <div class="top-search">
-      <h3>Top Searches:</h3>
-      <div class="top-search-links">
-        <a href="#">Attack on Titan</a>
-        <a href="#">Jujutsu Kaisen</a>
-        <a href="#">Demon Slayer</a>
-        <a href="#">My Hero Academia</a>
-        <a href="#">One Piece</a>
-        <a href="#">Chainsaw Man</a>
-        <a href="#">Spy x Family</a>
-        <a href="#">Tokyo Revengers</a>
-        <a href="#">solo leveling</a>
-        <a href="#">Vinland Saga</a>
-      </div>
-    </div>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="logo">ZERO ANIME</div>
+    <div class="spinner"></div>
+  </div>
+  
+  <!-- Profile Selection -->
+  <div class="profiles-container" id="profilesContainer">
+    <h1 class="title">Who's watching?</h1>
+    <div class="profile-grid" id="profileGrid"></div>
+    <button class="action-button" onclick="showManageScreen()">Manage Profiles</button>
+  </div>
+  
+  <!-- Netflix-style Manage Profiles -->
+  <div class="manage-container" id="manageContainer">
+    <h1 class="title">Manage Profiles</h1>
+    <div class="profile-grid" id="manageGrid"></div>
+    <button class="action-button" onclick="backToProfiles()">Done</button>
   </div>
 
-  <!-- Watch Button with Navigation -->
-  <button class="watch-button" id="goToNewScreen">Watch Anime Now</button>
-
-  <div class="social-section">
-    <h2>Share Zero Anime</h2>
-    <h3>to your friends!</h3>
-    <div class="social-buttons">
-      <button>Tiktok</button>
-      <button>Tweet</button>
-      <button>Share</button>
-      <button>Discord</button>
-    </div>
-  </div>
-
-  <div class="promo-section">
-    <h2>Zero Anime - The best site to watch anime online for Free with no Ads!!</h2>
-    <p>Do you know that according to Google, the monthly search volume for anime visited topics is up to<br> one/1 billion major点睛 as famous worldwide and it is no wonder we've seen a sharp rise in the<br> number of free online streaming sites.</p>
-  </div>
-
-  <div class="trending-posts">
-    <h3>Trending Posts</h3>
-    <div class="trending-post">
-      <h4>user801</h4>
-      <p>love the new solo leveling season<br></p>
-    </div>
-    <div class="trending-post">
-      <h4>I have the best taste in anime</h4>
-      <p>Change my mind..</p>
-    </div>
-    <div class="trending-post">
-      <p>Also i love this website so much.</p>
-    </div>
-    <div class="trending-post">
-      <p>This website was made by the discord user iyezwtf if you wanna help edit with me hit them dm's open at all times or for suggestions :)</p>
-    </div>
-  </div>
-
-  <!-- JavaScript for Navigation -->
   <script>
-    // Add event listener to the button
-    document.getElementById("goToNewScreen").addEventListener("click", function() {
-      // Redirect to the new page
-      window.location.href = "new-screen.html"; // Replace with your desired page
-    });
+    // [Keep all the same JavaScript from previous version]
+    // 1. INITIALIZE PROFILES
+    if (!localStorage.getItem('animeProfiles')) {
+      localStorage.setItem('animeProfiles', JSON.stringify([
+        { id: 1, name: 'User 1' }
+      ]));
+    }
+    
+    // 2. PROFILE FUNCTIONS
+    const getProfiles = () => JSON.parse(localStorage.getItem('animeProfiles')) || [];
+    const saveProfiles = (profiles) => localStorage.setItem('animeProfiles', JSON.stringify(profiles));
+    
+    // 3. RENDER PROFILE SELECTION
+    function renderProfiles() {
+      const profiles = getProfiles();
+      const grid = document.getElementById('profileGrid');
+      grid.innerHTML = '';
+      
+      profiles.forEach(profile => {
+        grid.innerHTML += `
+          <div class="profile" onclick="selectProfile(${profile.id})">
+            <div class="profile-icon">
+              <svg viewBox="0 0 24 24" fill="#FFE5B4" width="80" height="80">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <div class="profile-name">${profile.name}</div>
+          </div>
+        `;
+      });
+      
+      // Add two + buttons
+      for (let i = 0; i < 2; i++) {
+        const disabled = profiles.length >= 5 ? 'disabled-add' : '';
+        grid.innerHTML += `
+          <div class="profile add-profile ${disabled}" onclick="${profiles.length < 5 ? 'addProfile()' : ''}">
+            <div class="profile-icon">
+              <svg viewBox="0 0 24 24" fill="#FFE5B4" width="80" height="80">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+              </svg>
+            </div>
+            <div class="profile-name">Add Profile</div>
+          </div>
+        `;
+      }
+    }
+    
+    // 4. NETFLIX-STYLE MANAGE SCREEN
+    function renderManageScreen() {
+      const profiles = getProfiles();
+      const grid = document.getElementById('manageGrid');
+      grid.innerHTML = '';
+      
+      profiles.forEach(profile => {
+        grid.innerHTML += `
+          <div class="profile" data-id="${profile.id}">
+            <div class="profile-icon">
+              <svg viewBox="0 0 24 24" fill="#FFE5B4" width="100" height="100">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+              <div class="edit-options">
+                <button class="edit-btn" onclick="editProfile(${profile.id})">Edit</button>
+                ${profiles.length > 1 ? `<button class="delete-btn" onclick="deleteProfile(${profile.id})">Delete</button>` : ''}
+              </div>
+              <input type="text" class="name-input" id="edit-${profile.id}" value="${profile.name}">
+            </div>
+            <div class="profile-name">${profile.name}</div>
+          </div>
+        `;
+      });
+      
+      // Add + button if less than 5 profiles
+      if (profiles.length < 5) {
+        grid.innerHTML += `
+          <div class="profile add-profile" onclick="addProfile()">
+            <div class="profile-icon">
+              <svg viewBox="0 0 24 24" fill="#FFE5B4" width="100" height="100">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+              </svg>
+            </div>
+            <div class="profile-name">Add Profile</div>
+          </div>
+        `;
+      }
+    }
+    
+    // 5. PROFILE ACTIONS
+    function selectProfile(id) {
+      document.getElementById('profilesContainer').style.display = 'none';
+      document.getElementById('loadingScreen').style.display = 'flex';
+      
+      localStorage.setItem('selectedProfile', id);
+      
+      setTimeout(() => {
+        window.location.href = "new-screen.html";
+      }, 1500);
+    }
+    
+    function addProfile() {
+      const profiles = getProfiles();
+      if (profiles.length >= 5) return;
+      
+      const newId = profiles.length ? Math.max(...profiles.map(p => p.id)) + 1 : 1;
+      const newProfile = { id: newId, name: `User ${newId}` };
+      
+      saveProfiles([...profiles, newProfile]);
+      renderManageScreen();
+    }
+    
+    function editProfile(id) {
+      const input = document.getElementById(`edit-${id}`);
+      input.style.display = 'block';
+      input.focus();
+      
+      input.addEventListener('blur', function() {
+        saveProfileName(id);
+      });
+      
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          saveProfileName(id);
+        }
+      });
+    }
+    
+    function saveProfileName(id) {
+      const input = document.getElementById(`edit-${id}`);
+      const newName = input.value.trim();
+      
+      if (newName) {
+        const profiles = getProfiles().map(p => 
+          p.id === id ? {...p, name: newName} : p
+        );
+        saveProfiles(profiles);
+        renderManageScreen();
+      }
+      
+      input.style.display = 'none';
+    }
+    
+    function deleteProfile(id) {
+      const profiles = getProfiles();
+      if (profiles.length <= 1) return;
+      
+      if (confirm("Delete this profile permanently?")) {
+        saveProfiles(profiles.filter(p => p.id !== id));
+        renderManageScreen();
+      }
+    }
+    
+    // 6. SCREEN NAVIGATION
+    function showManageScreen() {
+      renderManageScreen();
+      document.getElementById('profilesContainer').style.display = 'none';
+      document.getElementById('manageContainer').style.display = 'block';
+    }
+    
+    function backToProfiles() {
+      renderProfiles();
+      document.getElementById('manageContainer').style.display = 'none';
+      document.getElementById('profilesContainer').style.display = 'block';
+    }
+    
+    // 7. INITIAL LOAD
+    setTimeout(() => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('profilesContainer').style.display = 'block';
+      renderProfiles();
+    }, 2500);
   </script>
 </body>
 </html>
-
