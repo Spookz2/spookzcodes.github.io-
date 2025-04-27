@@ -11,8 +11,8 @@
     body {
       margin: 0;
       padding: 0;
-      background: #2C2C2C; /* Light grey background */
-      color: #FFE5B4; /* Peach text */
+      background: #2C2C2C;
+      color: #FFE5B4;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       height: 100vh;
       display: flex;
@@ -22,7 +22,6 @@
       text-align: center;
     }
     
-    /* LOADING SCREEN */
     .loading-screen {
       display: flex;
       flex-direction: column;
@@ -45,12 +44,11 @@
       animation: spin 1s linear infinite;
     }
     
-    /* PROFILE SELECTION */
     .profiles-container, .manage-container {
       display: none;
       width: 100%;
       max-width: 800px;
-      background: rgba(0,0,0,0.2); /* Slightly darker container */
+      background: rgba(0,0,0,0.2);
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
@@ -103,7 +101,6 @@
       color: #FFE5B4;
     }
     
-    /* NETFLIX-STYLE MANAGE SCREEN */
     .manage-container .profile {
       width: 200px;
     }
@@ -172,20 +169,17 @@
   </style>
 </head>
 <body>
-  <!-- Loading Screen -->
   <div class="loading-screen" id="loadingScreen">
     <div class="logo">ZERO ANIME</div>
     <div class="spinner"></div>
   </div>
   
-  <!-- Profile Selection -->
   <div class="profiles-container" id="profilesContainer">
     <h1 class="title">Who's watching?</h1>
     <div class="profile-grid" id="profileGrid"></div>
     <button class="action-button" onclick="showManageScreen()">Manage Profiles</button>
   </div>
   
-  <!-- Netflix-style Manage Profiles -->
   <div class="manage-container" id="manageContainer">
     <h1 class="title">Manage Profiles</h1>
     <div class="profile-grid" id="manageGrid"></div>
@@ -193,7 +187,6 @@
   </div>
 
   <script>
-    // [Keep all the same JavaScript from previous version]
     // 1. INITIALIZE PROFILES
     if (!localStorage.getItem('animeProfiles')) {
       localStorage.setItem('animeProfiles', JSON.stringify([
@@ -284,10 +277,14 @@
       document.getElementById('profilesContainer').style.display = 'none';
       document.getElementById('loadingScreen').style.display = 'flex';
       
+      const profiles = getProfiles();
+      const selectedProfile = profiles.find(p => p.id === id);
+      
       localStorage.setItem('selectedProfile', id);
+      localStorage.setItem('currentUser', selectedProfile.name); // Store profile name
       
       setTimeout(() => {
-        window.location.href = "new-screen.html";
+        window.location.href = "new-screen.html"; // CHANGED TO new-screen.html
       }, 1500);
     }
     
@@ -327,6 +324,13 @@
           p.id === id ? {...p, name: newName} : p
         );
         saveProfiles(profiles);
+        
+        // Update currentUser if this is the active profile
+        const selectedProfile = localStorage.getItem('selectedProfile');
+        if (selectedProfile && parseInt(selectedProfile) === id) {
+          localStorage.setItem('currentUser', newName);
+        }
+        
         renderManageScreen();
       }
       
