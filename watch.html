@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -250,15 +250,17 @@
     .season-list {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
     
     .season {
       background-color: rgba(68, 68, 68, 0.9);
       border-radius: 8px;
       padding: 10px;
-      flex: 1;
+      min-width: 100px;
       text-align: center;
       transition: box-shadow 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
     }
     
     .season:hover {
@@ -280,6 +282,13 @@
     /* Hide "Episodes" text on hover */
     .season:hover p {
       display: none;
+    }
+
+    /* Disabled season style */
+    .season.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
     }
 
     /* Comment Section Styles - Updated */
@@ -446,15 +455,8 @@
     
     <div class="seasons">
       <h3>Seasons</h3>
-      <div class="season-list">
-        <div class="season">
-          <h4>Season 1</h4>
-          <p>12 Episodes</p>
-        </div>
-        <div class="season">
-          <h4>Season 2</h4>
-          <p>12 Episodes</p>
-        </div>
+      <div class="season-list" id="season-list">
+        <!-- Seasons will be dynamically added here -->
       </div>
     </div>
   </div>
@@ -522,7 +524,7 @@
     
     // Get the anime title from the URL parameter
     const urlParams = new URLSearchParams(window.location.search);
-    const animeTitle = decodeURIComponent(urlParams.get('anime'));
+    let animeTitle = decodeURIComponent(urlParams.get('anime'));
     console.log('Anime Title:', animeTitle);
     
     // Define episode data for each anime
@@ -1026,6 +1028,79 @@
       // Implement server change logic here
     }
 
+    // Function to get the base anime name (without season)
+    function getBaseAnimeName(fullName) {
+      // Remove "Season X" or "season X" from the end
+      return fullName.replace(/\s*(?:season|Season)\s*\d+$/i, '').trim();
+    }
+
+    // Function to get all available seasons for an anime
+    function getAvailableSeasons(baseName) {
+      const seasons = [];
+      const seasonRegex = new RegExp(`${baseName}\\s*(?:season|Season)?\\s*(\\d+)`, 'i');
+      
+      for (const animeName in animeEpisodes) {
+        const match = animeName.match(seasonRegex);
+        if (match && animeName.startsWith(baseName)) {
+          const seasonNum = parseInt(match[1]);
+          seasons.push({
+            number: seasonNum,
+            fullName: animeName
+          });
+        }
+      }
+      
+      // If no seasons found but the base name exists, treat as season 1
+      if (seasons.length === 0 && animeEpisodes[baseName]) {
+        seasons.push({
+          number: 1,
+          fullName: baseName
+        });
+      }
+      
+      // Sort seasons by number
+      seasons.sort((a, b) => a.number - b.number);
+      
+      return seasons;
+    }
+
+    // Function to create season buttons
+    function createSeasonButtons(baseName, currentSeasonName) {
+      const seasonsContainer = document.getElementById('season-list');
+      seasonsContainer.innerHTML = '';
+      
+      const availableSeasons = getAvailableSeasons(baseName);
+      
+      if (availableSeasons.length <= 1) {
+        // Hide seasons section if there's only one season
+        document.querySelector('.seasons').style.display = 'none';
+        return;
+      }
+      
+      // Show seasons section
+      document.querySelector('.seasons').style.display = 'block';
+      
+      availableSeasons.forEach(season => {
+        const seasonDiv = document.createElement('div');
+        seasonDiv.className = 'season';
+        if (season.fullName === currentSeasonName) {
+          seasonDiv.classList.add('active');
+        }
+        
+        seasonDiv.innerHTML = `
+          <h4>Season ${season.number}</h4>
+          <p>${animeEpisodes[season.fullName]?.length || 0} Episodes</p>
+        `;
+        
+        seasonDiv.onclick = () => {
+          // Update URL and reload the page with the new season
+          window.location.href = `watch.html?anime=${encodeURIComponent(season.fullName)}`;
+        };
+        
+        seasonsContainer.appendChild(seasonDiv);
+      });
+    }
+
     // Comment system functionality
     function loadComments() {
       const commentsContainer = document.getElementById('comments-container');
@@ -1127,8 +1202,15 @@
     // Load the correct episode list based on the anime title
     if (animeTitle && animeEpisodes[animeTitle]) {
       console.log('Episodes found for:', animeTitle);
+      
+      // Get base anime name and create season buttons
+      const baseAnimeName = getBaseAnimeName(animeTitle);
+      createSeasonButtons(baseAnimeName, animeTitle);
+      
       populateEpisodeList(animeEpisodes[animeTitle]);
-      loadEpisode(animeEpisodes[animeTitle][0].file, animeEpisodes[animeTitle][0].title);
+      if (animeEpisodes[animeTitle].length > 0) {
+        loadEpisode(animeEpisodes[animeTitle][0].file, animeEpisodes[animeTitle][0].title);
+      }
       loadComments(); // Load comments for this anime
     } else {
       console.error('Anime not found:', animeTitle);
